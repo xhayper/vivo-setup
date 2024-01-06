@@ -55,18 +55,31 @@ uninstall_package () {
     echo "Uninstalled $package"
 }
 
-echo "Backing up packages"
+printf "Do you want to backup packages? [y/n]: "
+read backup
 
-for package in ${package_list[@]}; do
-    backup_package $package
-done
+if [ "$backup" != "${backup#[Yy]}" ] ;then
+    echo "Backing up packages"
+    
+    for package in ${package_list[@]}; do
+        backup_package $package
+    done
 
-echo "Done"
+    echo "Done"
+fi
 
-echo "Uninstalling packages"
+printf "Are you sure you want to uninstall packages? [y/n]: "
+read uninstall
 
-for package in ${package_list[@]}; do
-    uninstall_package $package
-done
+if [ "$uninstall" != "${uninstall#[Yy]}" ] ;then
+    echo "Uninstalling packages"
 
-echo "Done"
+    for package in ${package_list[@]}; do
+        uninstall_package $package
+    done
+
+    echo "Done"
+else
+    echo "Aborting"
+    exit
+fi
