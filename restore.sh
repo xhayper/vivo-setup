@@ -1,16 +1,5 @@
 #!/bin/bash
 
-if ! command -v adb &> /dev/null
-then
-    echo "adb could not be found"
-    exit
-fi
-
-if [ -z "$(adb devices | tail -n +2)" ]; then
-    echo "No device found"
-    exit
-fi
-
 source common.sh
 
 restore_package () {
