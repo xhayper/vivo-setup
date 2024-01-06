@@ -55,8 +55,14 @@ uninstall_package () {
     echo "Uninstalled $package"
 }
 
-printf "Do you want to backup packages? [y/n]: "
-read backup
+
+while true; do
+    printf "Do you want to backup packages? [y/n]: "
+    read backup
+    if [ "$backup" != "${backup#[YyNn]}" ] ;then
+        break
+    fi
+done
 
 if [ "$backup" != "${backup#[Yy]}" ] ;then
     echo "Backing up packages"
@@ -66,10 +72,17 @@ if [ "$backup" != "${backup#[Yy]}" ] ;then
     done
 
     echo "Done"
+else
+    echo "Not backing up packages"
 fi
 
-printf "Are you sure you want to uninstall packages? [y/n]: "
-read uninstall
+while true; do
+    printf "Are you sure you want to uninstall packages? [y/n]: "
+    read uninstall
+    if [ "$uninstall" != "${uninstall#[YyNn]}" ] ;then
+        break
+    fi
+done
 
 if [ "$uninstall" != "${uninstall#[Yy]}" ] ;then
     echo "Uninstalling packages"
