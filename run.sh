@@ -37,9 +37,33 @@ uninstall_package () {
     fi
 
     echo "Uninstalling $package"
+    uninstall_result=($(adb shell pm uninstall -k --user 0 $package))
 
-    # TODO: error handling
-    adb shell pm uninstall -k --user 0 $package &> /dev/null
+    if [[ $uninstall_result == Failure* ]]; then
+        echo "Uninstalling with --user 0 failed, trying other method"
+        
+        local android_ver=($(adb shell getprop ro.build.version.release))
+
+        if [[ $android_ver == 13 ]]; then
+            uninstall_result=($(adb shell service call package 131 s16 $package i32 0 i32 0))
+        elif [[ $android_ver == 12 ]]; then
+            uninstall_result=($(adb shell service call package 134 s16 $package i32 0 i32 0))
+        fi
+
+        # Thank you Github Copilot for the following code
+
+        uninstall_result=${uninstall_result#*Parcel(}
+        uninstall_result=${uninstall_result//$'\n'/}
+        uninstall_result=(${uninstall_result// / })
+
+        if [[ " ${uninstall_result[@]} " =~ " 00000000 " && " ${uninstall_result[@]} " =~ " 00000001 " ]]; then
+            echo "Uninstalled $package"
+            return
+        else
+            echo "Uninstalling $package failed"
+            return
+        fi
+    fi
 
     echo "Uninstalled $package"
 }
