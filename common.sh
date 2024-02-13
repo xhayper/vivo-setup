@@ -12,4 +12,4 @@ if [ -z "$(adb devices | tail -n +2)" ]; then
 fi
 
 # TODO: Add more packages
-package_list=( "com.vivo.browser" "com.vivo.appstore" "com.vivo.easyshare" "com.vivo.website" "com.vivo.email" )
+package_list=( "com.vivo.browser" "com.vivo.appstore" "com.vivo.easyshare" "com.vivo.website" "com.vivo.email" "com.bbk.cloud" "com.vivo.appstore" "com.vivo.website" )
